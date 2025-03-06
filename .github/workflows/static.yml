@@ -1,4 +1,4 @@
-name: Deploy static content to Pages with Cypress tests
+name: Run Cypress tests and Deploy to Pages
 
 on:
   push:
@@ -11,15 +11,11 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: "cypress-tests"
   cancel-in-progress: false
 
 jobs:
-  # Job de testes e deploy
   cypress-tests-and-deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
 
     steps:
@@ -27,11 +23,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Passo 2: Configurar o Node.js (para instalar dependências)
+      # Passo 2: Configurar Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22.14.0'
+          node-version: '18'  # Usando uma versão estável do Node.js (18.x ou 16.x)
 
       # Passo 3: Instalar dependências
       - name: Install dependencies
@@ -43,17 +39,17 @@ jobs:
         run: |
           npx cypress run --headless
 
-      # Passo 5: Configurar Pages (se tudo passar)
+      # Passo 5: Configurar Pages
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      # Passo 6: Fazer upload do artefato para o GitHub Pages
+      # Passo 6: Fazer upload dos arquivos necessários para o GitHub Pages
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.' 
+          path: './site'  # Aqui você envia o diretório que contém seus arquivos estáticos (HTML, CSS, JS)
 
-      # Passo 7: Fazer o deploy para o GitHub Pages
+      # Passo 7: Fazer deploy para o GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
