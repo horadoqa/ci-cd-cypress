@@ -26,7 +26,7 @@ A página de login é composta por dois formulários principais: **Cadastro** e 
 - Botões de ação para "Sign Up" e "Sign In".
 - Estilização simples para o layout da página.
 
-### Exemplo de esboço:
+### Página de Login/Cadastro:
 
 <div align="center">
     <img src="./images/login.png">
